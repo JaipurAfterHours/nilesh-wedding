@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { GaneshIcon, Divider } from "../OrnateFrame";
+import { ElephantSVG, LotusSVG, FloatingStars } from "../decorative/RajasthaniElements";
 
 interface HeroSectionProps {
   groomName: string;
@@ -17,17 +18,94 @@ export const HeroSection = ({
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-cream via-ivory to-cream-dark">
       {/* Background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div 
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
           className="w-full h-full"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30M15 15L45 45M45 15L15 45' stroke='%23C5A355' stroke-width='0.5' fill='none'/%3E%3C/svg%3E")`,
-            backgroundSize: "60px 60px",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L40 80M0 40L80 40M20 20L60 60M60 20L20 60' stroke='%23C5A355' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='40' cy='40' r='15' stroke='%23C5A355' stroke-width='0.5' fill='none'/%3E%3C/svg%3E")`,
+            backgroundSize: "80px 80px",
           }}
         />
       </div>
 
-      <div className="relative z-20 text-center px-6 py-20">
+      {/* Floating Stars */}
+      <FloatingStars />
+
+      {/* Left Decorative Border */}
+      <div className="absolute left-0 top-0 bottom-0 w-24 md:w-32 flex flex-col items-center justify-between py-10 opacity-60">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
+          <LotusSVG className="w-12 h-12 md:w-16 md:h-16" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="flex-1 w-px bg-gradient-to-b from-gold via-gold/50 to-gold my-4"
+        />
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 1.1 }}
+        >
+          <ElephantSVG className="w-20 h-20 md:w-28 md:h-28" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 1.4 }}
+          className="flex-1 w-px bg-gradient-to-b from-gold via-gold/50 to-gold my-4"
+        />
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 1.7 }}
+        >
+          <LotusSVG className="w-12 h-12 md:w-16 md:h-16" />
+        </motion.div>
+      </div>
+
+      {/* Right Decorative Border */}
+      <div className="absolute right-0 top-0 bottom-0 w-24 md:w-32 flex flex-col items-center justify-between py-10 opacity-60">
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
+          <LotusSVG className="w-12 h-12 md:w-16 md:h-16" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="flex-1 w-px bg-gradient-to-b from-gold via-gold/50 to-gold my-4"
+        />
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 1.1 }}
+        >
+          <ElephantSVG className="w-20 h-20 md:w-28 md:h-28" flip />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 1.4 }}
+          className="flex-1 w-px bg-gradient-to-b from-gold via-gold/50 to-gold my-4"
+        />
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 1.7 }}
+        >
+          <LotusSVG className="w-12 h-12 md:w-16 md:h-16" />
+        </motion.div>
+      </div>
+
+      <div className="relative z-20 text-center px-6 py-20 max-w-4xl mx-auto">
         {/* Ganesh Icon */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
@@ -35,7 +113,10 @@ export const HeroSection = ({
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex justify-center mb-6"
         >
-          <GaneshIcon className="w-24 h-24 md:w-32 md:h-32" />
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-radial from-gold/20 to-transparent rounded-full scale-150" />
+            <GaneshIcon className="w-24 h-24 md:w-32 md:h-32 relative" />
+          </div>
         </motion.div>
 
         {/* Sanskrit Shloka */}
@@ -67,18 +148,28 @@ export const HeroSection = ({
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mb-8"
         >
-          <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-magenta mb-4 text-shadow-gold">
+          <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-magenta mb-4 drop-shadow-lg">
             {groomName}
           </h1>
           <p className="font-heading text-2xl md:text-3xl text-gold tracking-[0.5em] my-4">
             WEDS
           </p>
-          <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-magenta text-shadow-gold">
+          <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-magenta drop-shadow-lg">
             {brideName}
           </h1>
         </motion.div>
 
         <Divider className="max-w-xs mx-auto mb-8" />
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.95 }}
+          className="font-heading text-lg md:text-xl text-gold-dark tracking-widest uppercase mb-6"
+        >
+          A Union of Two Souls • A Bond Between Two Families
+        </motion.p>
 
         {/* Wedding Date */}
         <motion.div
@@ -97,7 +188,7 @@ export const HeroSection = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}

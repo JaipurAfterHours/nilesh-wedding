@@ -2,7 +2,10 @@ import { FloatingElements } from "@/components/FloatingElements";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { InvitationSection } from "@/components/sections/InvitationSection";
 import { EventsSection } from "@/components/sections/EventsSection";
+import { PhotoGallery } from "@/components/sections/PhotoGallery";
 import { RSVPSection } from "@/components/sections/RSVPSection";
+import { LotusSVG, PeacockSVG } from "@/components/decorative/RajasthaniElements";
+import { motion } from "framer-motion";
 
 // Wedding Data - Edit these details
 const weddingData = {
@@ -29,6 +32,9 @@ const weddingData = {
   nimantrak: ["Hari Sankar Agarwal", "Jitendra Agarwal"],
   address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",
   phone: "9828023034",
+
+  // Photos for gallery (add your own URLs here)
+  photos: [],
 
   // Events
   eventDays: [
@@ -62,7 +68,7 @@ const weddingData = {
     {
       title: "Haldi Ceremony",
       subtitle: "Come together as we playfully apply Haldi and bless our couple in the colors of purity!",
-      date: "Thursday, 5th January 2026",
+      date: "Thursday, 5th February 2026",
       venue: "Idanta",
       address: "Green Triveni, Grand Sikar Road Behind, Ashiana Greens, Jaipur-302048",
       events: [
@@ -74,7 +80,7 @@ const weddingData = {
     {
       title: "Lights, Camera, Sangeet",
       subtitle: "Step into a Bollywood Blockbuster Night where music, camera, dance and filmy-style celebrations light up the stage!",
-      date: "Thursday, 5th January 2026",
+      date: "Thursday, 5th February 2026",
       venue: "Idanta",
       address: "Green Triveni, Grand Sikar Road Behind, Ashiana Greens, Jaipur-302048",
       events: [
@@ -165,8 +171,8 @@ const weddingData = {
 const Index = () => {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      {/* Floating Diyas with Parallax */}
-      <FloatingElements variant="mixed" intensity="medium" />
+      {/* Floating Diyas with Parallax - Hero only */}
+      <FloatingElements variant="mixed" intensity="heavy" heroOnly={true} />
 
       {/* Hero Section */}
       <HeroSection
@@ -190,6 +196,13 @@ const Index = () => {
         phone={weddingData.phone}
       />
 
+      {/* Photo Gallery */}
+      <PhotoGallery
+        photos={weddingData.photos}
+        title="Our Moments"
+        subtitle="A glimpse of our beautiful journey together"
+      />
+
       {/* Events Timeline */}
       <EventsSection days={weddingData.eventDays} />
 
@@ -204,15 +217,46 @@ const Index = () => {
       />
 
       {/* Footer */}
-      <footer className="bg-gradient-to-b from-ivory to-cream-dark py-12 text-center">
-        <p className="font-script text-4xl text-magenta mb-2">
-          {weddingData.groomName} & {weddingData.brideName}
-        </p>
-        <p className="font-body text-sm text-brown-light">
-          {weddingData.weddingDate}
-        </p>
-        <div className="mt-8 text-gold font-heading text-lg">
-          ॥ शुभ विवाह ॥
+      <footer className="relative bg-gradient-to-b from-ivory to-cream-dark py-16 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute left-8 bottom-8 opacity-40">
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            <LotusSVG className="w-16 h-16" />
+          </motion.div>
+        </div>
+        <div className="absolute right-8 bottom-8 opacity-40">
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+          >
+            <LotusSVG className="w-16 h-16" />
+          </motion.div>
+        </div>
+        <div className="absolute left-1/2 -translate-x-1/2 top-4 opacity-30">
+          <PeacockSVG className="w-24 h-24" />
+        </div>
+
+        <div className="text-center relative z-10">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-script text-5xl md:text-6xl text-magenta mb-2"
+          >
+            {weddingData.groomName} & {weddingData.brideName}
+          </motion.p>
+          <p className="font-body text-sm text-brown-light mb-4">
+            {weddingData.weddingDate}
+          </p>
+          <div className="mt-6 text-gold font-heading text-xl tracking-widest">
+            ॥ शुभ विवाह ॥
+          </div>
+          <p className="mt-8 font-body text-xs text-brown-light/60">
+            Made with love
+          </p>
         </div>
       </footer>
     </div>
