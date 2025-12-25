@@ -314,7 +314,7 @@ export const EventsSection = ({ days }: EventsSectionProps) => {
 
       <div className="container max-w-6xl mx-auto px-3 sm:px-4 relative z-10">
         {/* Responsive grid; when last row has a single card, let it span full width to avoid empty space */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-fr">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {days.map((day, dayIndex) => {
             const total = days.length;
             const isLast = dayIndex === total - 1;
@@ -375,11 +375,11 @@ const EventDayCard = ({
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className={`relative h-full w-full ${layoutClass} ${isLargeCard ? "" : ""}`}
+      className={`relative w-full ${layoutClass}`}
     >
-      {/* Card with themed styling */}
+      {/* Card with themed styling - consistent height for all cards */}
       <div
-        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} h-full flex flex-col ${isSingleEvent ? 'min-h-[220px] sm:min-h-[230px] md:min-h-[240px]' : 'min-h-[260px] sm:min-h-[280px] md:min-h-[300px]'}`}
+        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col h-[240px] sm:h-[250px] md:h-[260px]`}
       >
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
@@ -459,8 +459,8 @@ const EventDayCard = ({
         </div>
 
         {/* Date */}
-        <div className={`px-4 py-2 text-center ${theme.textColor}`}>
-          <p className="font-heading text-base sm:text-lg font-semibold text-shadow-heading">
+        <div className={`px-4 py-1.5 text-center ${theme.textColor}`}>
+          <p className="font-heading text-sm sm:text-base font-semibold text-shadow-heading">
             {day.date}
           </p>
         </div>
@@ -492,33 +492,29 @@ const EventDayCard = ({
           />
         </div>
 
-        {/* Events - for single event, keep it compact (avoid large empty space) */}
-        <div
-          className={`p-4 flex-1 flex flex-col ${
-            isSingleEvent ? "justify-start" : "justify-center"
-          }`}
-        >
+        {/* Events - centered content with compact spacing */}
+        <div className="px-3 py-2 flex-1 flex flex-col justify-center">
           {isSingleEvent ? (
-            <div className="flex items-center justify-center pt-2">
+            <div className="flex items-center justify-center">
               <div className={`flex items-center gap-2 ${theme.textColor}`}>
-                <Clock className="w-5 h-5" />
-                <span className="font-heading text-xl font-semibold">
+                <Clock className="w-4 h-4" />
+                <span className="font-heading text-lg font-semibold">
                   {day.events[0].time}
                 </span>
               </div>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {day.events.map((event, eventIndex) => (
                 <motion.div
                   key={eventIndex}
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.2 + eventIndex * 0.1 }}
-                  className={`flex items-center justify-between py-2 border-b ${theme.border} last:border-0`}
+                  className={`flex items-center justify-between py-1.5 border-b ${theme.border} last:border-0`}
                 >
                   <h4
-                    className={`font-heading text-sm sm:text-base ${theme.textColor} font-semibold truncate`}
+                    className={`font-heading text-xs sm:text-sm ${theme.textColor} font-semibold truncate`}
                   >
                     {event.name}
                   </h4>
@@ -526,7 +522,7 @@ const EventDayCard = ({
                     className={`flex items-center gap-1 ${theme.textColor} ml-2 flex-shrink-0`}
                   >
                     <Clock className="w-3 h-3" />
-                    <span className="font-body text-xs sm:text-sm font-medium whitespace-nowrap">
+                    <span className="font-body text-xs font-medium whitespace-nowrap">
                       {event.time}
                     </span>
                   </div>
@@ -536,12 +532,10 @@ const EventDayCard = ({
           )}
         </div>
 
-        {/* Venue with Google Maps link - no pin icon */}
+        {/* Venue with Google Maps link - always at bottom */}
         {(day.venue || day.address) && (
           <div
-            className={`${
-              isSingleEvent ? "mt-2" : "mt-auto"
-            } bg-gradient-to-r from-transparent via-current/5 to-transparent px-4 py-3 border-t ${theme.border} ${theme.textColor}`}
+            className={`mt-auto bg-gradient-to-r from-transparent via-current/5 to-transparent px-3 py-2 border-t ${theme.border} ${theme.textColor}`}
           >
             <a
               href={getMapLink(day.address || day.venue || "", day.mapLink)}
@@ -550,17 +544,17 @@ const EventDayCard = ({
               className="block hover:opacity-80 transition-opacity cursor-pointer group"
             >
               <div className="text-center">
-                <p className="font-body text-[10px] uppercase tracking-widest opacity-70 mb-1 flex items-center justify-center gap-1">
+                <p className="font-body text-[9px] uppercase tracking-widest opacity-70 mb-0.5 flex items-center justify-center gap-1">
                   Venue
-                  <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <ExternalLink className="w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" />
                 </p>
                 {day.venue && (
-                  <p className="font-heading text-sm font-semibold group-hover:underline">
+                  <p className="font-heading text-xs font-semibold group-hover:underline line-clamp-1">
                     {day.venue}
                   </p>
                 )}
                 {day.address && (
-                  <p className="font-body text-xs opacity-80 break-words group-hover:underline leading-tight">
+                  <p className="font-body text-[10px] opacity-80 break-words group-hover:underline leading-tight line-clamp-1">
                     {day.address}
                   </p>
                 )}
