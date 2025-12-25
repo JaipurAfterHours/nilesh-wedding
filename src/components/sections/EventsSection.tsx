@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Divider } from "../OrnateFrame";
-import { MapPin, Clock } from "lucide-react";
+import { MapPin, Clock, ExternalLink } from "lucide-react";
 import {
   MarigoldSVG,
   MehendiHandSVG,
@@ -13,6 +13,9 @@ import {
   DholakSVG,
   KalashSVG,
   FloatingDecoration,
+  FilmReelSVG,
+  CameraSVG,
+  SpotlightSVG,
 } from "../decorative/EventIllustrations";
 
 interface Event {
@@ -32,6 +35,7 @@ interface EventDay {
   events: Event[];
   venue?: string;
   address?: string;
+  mapLink?: string;
 }
 
 interface EventsSectionProps {
@@ -96,7 +100,7 @@ const getEventTheme = (title: string, eventNames: string[]) => {
       illustrations: ["turmeric", "kalash"],
     };
   }
-  if (combined.includes("sangeet") || combined.includes("music") || combined.includes("dance")) {
+  if (combined.includes("sangeet") || combined.includes("music") || combined.includes("dance") || combined.includes("camera") || combined.includes("lights")) {
     return {
       theme: "sangeet",
       primary: "#1e40af",
@@ -106,7 +110,7 @@ const getEventTheme = (title: string, eventNames: string[]) => {
       headerBg: "from-blue-600 to-indigo-700",
       textColor: "text-blue-900",
       iconColor: "#1e3a8a",
-      illustrations: ["music", "dholak"],
+      illustrations: ["filmreel", "camera", "spotlight", "music"],
     };
   }
   if (combined.includes("barat") || combined.includes("nikasi") || combined.includes("lagan") || combined.includes("panigrahan") || combined.includes("wedding")) {
@@ -155,16 +159,27 @@ const renderIllustration = (type: string, color: string, className: string) => {
       return <HorseSVG className={className} color={color} />;
     case "kalash":
       return <KalashSVG className={className} color={color} />;
+    case "filmreel":
+      return <FilmReelSVG className={className} color={color} />;
+    case "camera":
+      return <CameraSVG className={className} color={color} />;
+    case "spotlight":
+      return <SpotlightSVG className={className} color={color} />;
     default:
       return <MarigoldSVG className={className} color={color} />;
   }
 };
 
-// Themed Rajasthani Arch Header Component
+// Generate Google Maps link from address
+const getMapLink = (address: string, mapLink?: string) => {
+  if (mapLink) return mapLink;
+  return `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+};
+
+// Themed Rajasthani Arch Header Component - Fixed for no overlapping
 const RajasthaniArchHeader = ({ 
   title, 
   subtitle,
-  gradientColors,
   textColor,
 }: { 
   title: string; 
@@ -172,50 +187,44 @@ const RajasthaniArchHeader = ({
   gradientColors: string;
   textColor: string;
 }) => (
-  <div className="relative">
-    <svg viewBox="0 0 400 100" className="w-full h-auto" preserveAspectRatio="none">
+  <div className="relative pt-4">
+    {/* Decorative arch top */}
+    <svg viewBox="0 0 400 60" className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
       <defs>
-        <linearGradient id={`archHeaderGold-${title.replace(/\s/g, '')}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="currentColor" className={gradientColors} />
+        <linearGradient id={`archGrad-${title.replace(/\s/g, '')}`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="currentColor" />
           <stop offset="50%" stopColor="currentColor" />
           <stop offset="100%" stopColor="currentColor" />
         </linearGradient>
       </defs>
-      {/* Main arch outline */}
+      {/* Decorative top arch line */}
       <path
-        d="M0 100 L0 70 Q0 35 35 35 L100 35 Q120 35 135 20 Q160 0 200 0 Q240 0 265 20 Q280 35 300 35 L365 35 Q400 35 400 70 L400 100"
-        className={`fill-current ${gradientColors} opacity-20`}
+        d="M0 60 L0 45 Q0 25 30 25 L120 25 Q150 25 170 10 Q185 0 200 0 Q215 0 230 10 Q250 25 280 25 L370 25 Q400 25 400 45 L400 60"
+        className={`fill-current ${textColor} opacity-10`}
       />
       <path
-        d="M0 100 L0 70 Q0 35 35 35 L100 35 Q120 35 135 20 Q160 0 200 0 Q240 0 265 20 Q280 35 300 35 L365 35 Q400 35 400 70 L400 100"
-        className={`stroke-current ${gradientColors} fill-none`}
-        strokeWidth="3"
+        d="M0 60 L0 45 Q0 25 30 25 L120 25 Q150 25 170 10 Q185 0 200 0 Q215 0 230 10 Q250 25 280 25 L370 25 Q400 25 400 45 L400 60"
+        className={`stroke-current ${textColor} fill-none opacity-60`}
+        strokeWidth="2"
       />
-      {/* Inner arch detail */}
-      <path
-        d="M20 100 L20 75 Q20 50 50 50 L110 50 Q130 50 145 35 Q165 15 200 15 Q235 15 255 35 Q270 50 290 50 L350 50 Q380 50 380 75 L380 100"
-        className={`stroke-current ${gradientColors} fill-none opacity-50`}
-        strokeWidth="1.5"
-      />
-      {/* Top ornament - Kalash */}
-      <circle cx="200" cy="12" r="8" className={`fill-current ${gradientColors}`} />
-      <path d="M192 12 L200 2 L208 12" className={`fill-current ${gradientColors}`} />
-      {/* Side lotus buds */}
-      <ellipse cx="100" cy="45" rx="6" ry="10" className={`fill-current ${gradientColors} opacity-60`} />
-      <ellipse cx="300" cy="45" rx="6" ry="10" className={`fill-current ${gradientColors} opacity-60`} />
-      {/* Corner decorations */}
-      <circle cx="30" cy="55" r="4" className={`fill-current ${gradientColors} opacity-40`} />
-      <circle cx="370" cy="55" r="4" className={`fill-current ${gradientColors} opacity-40`} />
-      {/* Side hanging elements */}
-      <path d="M50 35 L50 25 M55 35 L55 28 M60 35 L60 25" className={`stroke-current ${gradientColors}`} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M340 35 L340 25 M345 35 L345 28 M350 35 L350 25" className={`stroke-current ${gradientColors}`} strokeWidth="1.5" strokeLinecap="round" />
+      {/* Top kalash ornament */}
+      <circle cx="200" cy="8" r="6" className={`fill-current ${textColor} opacity-70`} />
+      <path d="M194 8 L200 1 L206 8" className={`fill-current ${textColor} opacity-70`} />
+      {/* Side dots */}
+      <circle cx="80" cy="35" r="3" className={`fill-current ${textColor} opacity-40`} />
+      <circle cx="320" cy="35" r="3" className={`fill-current ${textColor} opacity-40`} />
+      {/* Hanging elements */}
+      <path d="M50 25 L50 18 M55 25 L55 20 M60 25 L60 18" className={`stroke-current ${textColor} opacity-50`} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M340 25 L340 18 M345 25 L345 20 M350 25 L350 18" className={`stroke-current ${textColor} opacity-50`} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
-    <div className="absolute inset-0 flex flex-col items-center justify-center pt-4 md:pt-6 px-2">
-      <h3 className={`font-script text-2xl sm:text-3xl md:text-4xl ${textColor} text-glow-gold text-center leading-tight`}>
+    
+    {/* Title content - separate from SVG to avoid overlap */}
+    <div className="text-center px-4 py-3">
+      <h3 className={`font-script text-2xl sm:text-3xl md:text-4xl lg:text-5xl ${textColor} text-glow-gold leading-relaxed`}>
         {title}
       </h3>
       {subtitle && (
-        <p className={`font-body text-[10px] sm:text-xs md:text-sm ${textColor} opacity-80 text-center max-w-[200px] sm:max-w-xs mt-1 px-2 leading-tight`}>
+        <p className={`font-body text-xs sm:text-sm ${textColor} opacity-80 text-center max-w-sm mx-auto mt-2 leading-relaxed px-2`}>
           {subtitle}
         </p>
       )}
@@ -278,41 +287,57 @@ const EventDayCard = ({ day, index }: { day: EventDay; index: number }) => {
       className="relative"
     >
       {/* Floating illustrations - Left */}
-      <div className="absolute -left-2 sm:-left-4 md:-left-12 top-1/4 opacity-40 hidden sm:block">
+      <div className="absolute -left-2 sm:-left-4 md:-left-16 top-1/4 opacity-40 hidden sm:block">
         <FloatingDecoration delay={0}>
           {renderIllustration(theme.illustrations[0], theme.primary, "w-10 h-10 md:w-16 md:h-16")}
         </FloatingDecoration>
       </div>
       
       {/* Floating illustrations - Right */}
-      <div className="absolute -right-2 sm:-right-4 md:-right-12 top-1/3 opacity-40 hidden sm:block">
+      <div className="absolute -right-2 sm:-right-4 md:-right-16 top-1/3 opacity-40 hidden sm:block">
         <FloatingDecoration delay={0.5}>
-          {renderIllustration(theme.illustrations[1], theme.secondary, "w-8 h-8 md:w-14 md:h-14")}
+          {renderIllustration(theme.illustrations[1] || theme.illustrations[0], theme.secondary, "w-8 h-8 md:w-14 md:h-14")}
         </FloatingDecoration>
       </div>
+
+      {/* Additional illustrations for Sangeet */}
+      {theme.theme === "sangeet" && (
+        <>
+          <div className="absolute -left-4 md:-left-20 bottom-1/4 opacity-30 hidden md:block">
+            <FloatingDecoration delay={1}>
+              {renderIllustration("spotlight", theme.primary, "w-12 h-12")}
+            </FloatingDecoration>
+          </div>
+          <div className="absolute -right-4 md:-right-20 bottom-1/3 opacity-30 hidden md:block">
+            <FloatingDecoration delay={1.5}>
+              {renderIllustration("music", theme.secondary, "w-10 h-10")}
+            </FloatingDecoration>
+          </div>
+        </>
+      )}
 
       {/* Card with themed styling */}
       <div className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-lg overflow-hidden shadow-xl border-2 ${theme.border}`}>
         {/* Ornate corner decorations */}
-        <div className="absolute top-0 left-0 w-12 h-12 md:w-16 md:h-16">
+        <div className="absolute top-0 left-0 w-10 h-10 md:w-14 md:h-14">
           <svg viewBox="0 0 60 60" className={`w-full h-full ${theme.textColor} opacity-50`}>
             <path d="M0 0 L0 40 Q0 0 40 0 Z" fill="currentColor" opacity="0.2" />
             <path d="M0 0 Q30 30 0 60 M0 0 Q30 30 60 0" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.5" />
           </svg>
         </div>
-        <div className="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 rotate-90">
+        <div className="absolute top-0 right-0 w-10 h-10 md:w-14 md:h-14 rotate-90">
           <svg viewBox="0 0 60 60" className={`w-full h-full ${theme.textColor} opacity-50`}>
             <path d="M0 0 L0 40 Q0 0 40 0 Z" fill="currentColor" opacity="0.2" />
             <path d="M0 0 Q30 30 0 60 M0 0 Q30 30 60 0" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.5" />
           </svg>
         </div>
-        <div className="absolute bottom-0 left-0 w-12 h-12 md:w-16 md:h-16 -rotate-90">
+        <div className="absolute bottom-0 left-0 w-10 h-10 md:w-14 md:h-14 -rotate-90">
           <svg viewBox="0 0 60 60" className={`w-full h-full ${theme.textColor} opacity-50`}>
             <path d="M0 0 L0 40 Q0 0 40 0 Z" fill="currentColor" opacity="0.2" />
             <path d="M0 0 Q30 30 0 60 M0 0 Q30 30 60 0" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.5" />
           </svg>
         </div>
-        <div className="absolute bottom-0 right-0 w-12 h-12 md:w-16 md:h-16 rotate-180">
+        <div className="absolute bottom-0 right-0 w-10 h-10 md:w-14 md:h-14 rotate-180">
           <svg viewBox="0 0 60 60" className={`w-full h-full ${theme.textColor} opacity-50`}>
             <path d="M0 0 L0 40 Q0 0 40 0 Z" fill="currentColor" opacity="0.2" />
             <path d="M0 0 Q30 30 0 60 M0 0 Q30 30 60 0" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.5" />
@@ -379,34 +404,42 @@ const EventDayCard = ({ day, index }: { day: EventDay; index: number }) => {
           ))}
         </div>
 
-        {/* Venue */}
+        {/* Venue with Google Maps link */}
         {(day.venue || day.address) && (
           <div className={`bg-gradient-to-r from-transparent via-current/5 to-transparent px-4 sm:px-6 py-3 sm:py-4 border-t ${theme.border} ${theme.textColor}`}>
-            <div className="flex items-start gap-2 sm:gap-3 justify-center text-center">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
-              <div className="min-w-0">
-                <p className="font-body text-[10px] sm:text-xs uppercase tracking-widest opacity-70 mb-1">
-                  Venue
-                </p>
-                {day.venue && (
-                  <p className="font-heading text-base sm:text-lg font-semibold text-shadow-heading">
-                    {day.venue}
+            <a 
+              href={getMapLink(day.address || day.venue || "", day.mapLink)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block hover:opacity-80 transition-opacity cursor-pointer group"
+            >
+              <div className="flex items-start gap-2 sm:gap-3 justify-center text-center">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <p className="font-body text-[10px] sm:text-xs uppercase tracking-widest opacity-70 mb-1 flex items-center justify-center gap-1">
+                    Venue
+                    <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
                   </p>
-                )}
-                {day.address && (
-                  <p className="font-body text-xs sm:text-sm opacity-80 break-words">
-                    {day.address}
-                  </p>
-                )}
+                  {day.venue && (
+                    <p className="font-heading text-base sm:text-lg font-semibold text-shadow-heading group-hover:underline">
+                      {day.venue}
+                    </p>
+                  )}
+                  {day.address && (
+                    <p className="font-body text-xs sm:text-sm opacity-80 break-words group-hover:underline">
+                      {day.address}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         )}
 
         {/* Bottom illustration bar for mobile */}
         <div className="flex justify-center gap-4 py-2 sm:hidden opacity-30">
           {renderIllustration(theme.illustrations[0], theme.primary, "w-6 h-6")}
-          {renderIllustration(theme.illustrations[1], theme.secondary, "w-6 h-6")}
+          {renderIllustration(theme.illustrations[1] || theme.illustrations[0], theme.secondary, "w-6 h-6")}
         </div>
       </div>
     </motion.div>

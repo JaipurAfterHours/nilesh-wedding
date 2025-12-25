@@ -233,6 +233,94 @@ export const KalashSVG = ({ className = "w-12 h-14", color = "#ea580c" }: { clas
   </svg>
 );
 
+// Film Reel for Sangeet (Bollywood theme)
+export const FilmReelSVG = ({ className = "w-14 h-14", color = "#1e40af" }: { className?: string; color?: string }) => (
+  <svg viewBox="0 0 60 60" className={className}>
+    <defs>
+      <linearGradient id="filmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor={color} />
+        <stop offset="100%" stopColor="#1e3a8a" />
+      </linearGradient>
+    </defs>
+    {/* Outer circle */}
+    <circle cx="30" cy="30" r="26" fill="none" stroke="url(#filmGrad)" strokeWidth="3" />
+    {/* Inner circle */}
+    <circle cx="30" cy="30" r="8" fill="url(#filmGrad)" opacity="0.3" />
+    <circle cx="30" cy="30" r="8" fill="none" stroke="url(#filmGrad)" strokeWidth="2" />
+    {/* Center hole */}
+    <circle cx="30" cy="30" r="3" fill={color} />
+    {/* Film sprocket holes */}
+    {[...Array(8)].map((_, i) => (
+      <circle
+        key={i}
+        cx={30 + 18 * Math.cos((i * 45 * Math.PI) / 180)}
+        cy={30 + 18 * Math.sin((i * 45 * Math.PI) / 180)}
+        r="4"
+        fill={color}
+        opacity="0.6"
+      />
+    ))}
+    {/* Film strip decoration */}
+    <path d="M30 4 L30 10 M30 50 L30 56" stroke="url(#filmGrad)" strokeWidth="2" />
+  </svg>
+);
+
+// Camera for Sangeet
+export const CameraSVG = ({ className = "w-14 h-12", color = "#1e40af" }: { className?: string; color?: string }) => (
+  <svg viewBox="0 0 70 55" className={className}>
+    <defs>
+      <linearGradient id="cameraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor={color} />
+        <stop offset="100%" stopColor="#1e3a8a" />
+      </linearGradient>
+    </defs>
+    {/* Camera body */}
+    <rect x="8" y="18" width="54" height="32" rx="4" fill="url(#cameraGrad)" opacity="0.3" />
+    <rect x="8" y="18" width="54" height="32" rx="4" fill="none" stroke="url(#cameraGrad)" strokeWidth="2" />
+    {/* Lens */}
+    <circle cx="35" cy="34" r="12" fill="none" stroke="url(#cameraGrad)" strokeWidth="2" />
+    <circle cx="35" cy="34" r="7" fill={color} opacity="0.4" />
+    <circle cx="35" cy="34" r="3" fill={color} />
+    {/* Flash */}
+    <rect x="10" y="8" width="18" height="10" rx="2" fill="url(#cameraGrad)" opacity="0.5" />
+    <rect x="10" y="8" width="18" height="10" rx="2" fill="none" stroke="url(#cameraGrad)" strokeWidth="1.5" />
+    {/* Shutter button */}
+    <circle cx="52" cy="14" r="4" fill={color} opacity="0.7" />
+    {/* Viewfinder */}
+    <rect x="46" y="22" width="10" height="6" rx="1" fill={color} opacity="0.5" />
+  </svg>
+);
+
+// Spotlight for Sangeet
+export const SpotlightSVG = ({ className = "w-12 h-14", color = "#1e40af" }: { className?: string; color?: string }) => (
+  <svg viewBox="0 0 50 60" className={className}>
+    <defs>
+      <linearGradient id="spotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor={color} />
+        <stop offset="100%" stopColor="#1e3a8a" />
+      </linearGradient>
+      <linearGradient id="beamGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
+      </linearGradient>
+    </defs>
+    {/* Light beam */}
+    <path d="M15 25 L5 55 L45 55 L35 25 Z" fill="url(#beamGrad)" />
+    {/* Spotlight housing */}
+    <ellipse cx="25" cy="18" rx="12" ry="8" fill="url(#spotGrad)" opacity="0.8" />
+    <ellipse cx="25" cy="18" rx="12" ry="8" fill="none" stroke="url(#spotGrad)" strokeWidth="2" />
+    {/* Lens */}
+    <ellipse cx="25" cy="22" rx="8" ry="4" fill="#fbbf24" opacity="0.8" />
+    {/* Mount */}
+    <path d="M22 10 L22 5 L28 5 L28 10" fill="none" stroke="url(#spotGrad)" strokeWidth="2" />
+    <circle cx="25" cy="4" r="3" fill={color} opacity="0.6" />
+    {/* Sparkles */}
+    <circle cx="12" cy="45" r="1.5" fill="#fbbf24" opacity="0.6" />
+    <circle cx="38" cy="48" r="1" fill="#fbbf24" opacity="0.6" />
+    <circle cx="25" cy="50" r="1.5" fill="#fbbf24" opacity="0.8" />
+  </svg>
+);
+
 // Animated floating decoration wrapper
 export const FloatingDecoration = ({ 
   children, 
@@ -270,4 +358,7 @@ export default {
   DholakSVG,
   KalashSVG,
   FloatingDecoration,
+  FilmReelSVG,
+  CameraSVG,
+  SpotlightSVG,
 };
