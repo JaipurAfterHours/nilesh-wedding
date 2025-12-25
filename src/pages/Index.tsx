@@ -39,7 +39,7 @@ const weddingData = {
   // Events
   eventDays: [
     {
-      title: "Ganesh Sthapana",
+      title: "Programme",
       date: "Saturday, 31st January 2026",
       venue: "At Residence",
       address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",
@@ -49,7 +49,7 @@ const weddingData = {
       ],
     },
     {
-      title: "Baan Ceremony",
+      title: "Programme",
       date: "Monday, 2nd February 2026",
       venue: "At Residence",
       address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",
@@ -59,7 +59,7 @@ const weddingData = {
       ],
     },
     {
-      title: "Sakdi Vinayak",
+      title: "Programme",
       date: "Wednesday, 4th February 2026",
       venue: "At Residence",
       address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",

@@ -176,20 +176,22 @@ const getMapLink = (address: string, mapLink?: string) => {
   return `https://maps.google.com/?q=${encodeURIComponent(address)}`;
 };
 
-// Themed Rajasthani Arch Header Component - Fixed for no overlapping
+// Themed Rajasthani Arch Header Component - Title inside colored arch like reference
 const RajasthaniArchHeader = ({ 
   title, 
   subtitle,
   textColor,
+  bgColor,
 }: { 
   title: string; 
   subtitle?: string;
   gradientColors: string;
   textColor: string;
+  bgColor?: string;
 }) => (
-  <div className="relative pt-4">
-    {/* Decorative arch top */}
-    <svg viewBox="0 0 400 60" className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
+  <div className="relative">
+    {/* Decorative arch with filled background */}
+    <svg viewBox="0 0 400 100" className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id={`archGrad-${title.replace(/\s/g, '')}`} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="currentColor" />
@@ -197,34 +199,41 @@ const RajasthaniArchHeader = ({
           <stop offset="100%" stopColor="currentColor" />
         </linearGradient>
       </defs>
-      {/* Decorative top arch line */}
+      {/* Filled arch background */}
       <path
-        d="M0 60 L0 45 Q0 25 30 25 L120 25 Q150 25 170 10 Q185 0 200 0 Q215 0 230 10 Q250 25 280 25 L370 25 Q400 25 400 45 L400 60"
-        className={`fill-current ${textColor} opacity-10`}
+        d="M0 100 L0 60 Q0 30 30 30 L120 30 Q150 30 170 15 Q185 2 200 2 Q215 2 230 15 Q250 30 280 30 L370 30 Q400 30 400 60 L400 100 Z"
+        className={`fill-current ${textColor} opacity-15`}
       />
+      {/* Arch outline */}
       <path
-        d="M0 60 L0 45 Q0 25 30 25 L120 25 Q150 25 170 10 Q185 0 200 0 Q215 0 230 10 Q250 25 280 25 L370 25 Q400 25 400 45 L400 60"
+        d="M0 100 L0 60 Q0 30 30 30 L120 30 Q150 30 170 15 Q185 2 200 2 Q215 2 230 15 Q250 30 280 30 L370 30 Q400 30 400 60 L400 100"
         className={`stroke-current ${textColor} fill-none opacity-60`}
         strokeWidth="2"
       />
+      {/* Inner arch detail */}
+      <path
+        d="M15 100 L15 65 Q15 40 40 40 L125 40 Q155 40 175 25 Q190 12 200 12 Q210 12 225 25 Q245 40 275 40 L360 40 Q385 40 385 65 L385 100"
+        className={`stroke-current ${textColor} fill-none opacity-30`}
+        strokeWidth="1"
+      />
       {/* Top kalash ornament */}
-      <circle cx="200" cy="8" r="6" className={`fill-current ${textColor} opacity-70`} />
-      <path d="M194 8 L200 1 L206 8" className={`fill-current ${textColor} opacity-70`} />
-      {/* Side dots */}
-      <circle cx="80" cy="35" r="3" className={`fill-current ${textColor} opacity-40`} />
-      <circle cx="320" cy="35" r="3" className={`fill-current ${textColor} opacity-40`} />
-      {/* Hanging elements */}
-      <path d="M50 25 L50 18 M55 25 L55 20 M60 25 L60 18" className={`stroke-current ${textColor} opacity-50`} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M340 25 L340 18 M345 25 L345 20 M350 25 L350 18" className={`stroke-current ${textColor} opacity-50`} strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="200" cy="10" r="7" className={`fill-current ${textColor} opacity-80`} />
+      <path d="M193 10 L200 2 L207 10" className={`fill-current ${textColor} opacity-80`} />
+      {/* Side decorative dots */}
+      <circle cx="70" cy="45" r="4" className={`fill-current ${textColor} opacity-40`} />
+      <circle cx="330" cy="45" r="4" className={`fill-current ${textColor} opacity-40`} />
+      {/* Corner decorative curves */}
+      <path d="M10 90 Q10 70 30 70" className={`stroke-current ${textColor} fill-none opacity-30`} strokeWidth="1.5" />
+      <path d="M390 90 Q390 70 370 70" className={`stroke-current ${textColor} fill-none opacity-30`} strokeWidth="1.5" />
     </svg>
     
-    {/* Title content - separate from SVG to avoid overlap */}
-    <div className="text-center px-4 py-3">
-      <h3 className={`font-script text-2xl sm:text-3xl md:text-4xl lg:text-5xl ${textColor} text-glow-gold leading-relaxed`}>
+    {/* Title content positioned over the arch */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
+      <h3 className={`font-script text-xl sm:text-2xl md:text-3xl ${textColor} text-glow-gold leading-tight text-center px-4`}>
         {title}
       </h3>
       {subtitle && (
-        <p className={`font-body text-xs sm:text-sm ${textColor} opacity-80 text-center max-w-sm mx-auto mt-2 leading-relaxed px-2`}>
+        <p className={`font-body text-[10px] sm:text-xs ${textColor} opacity-70 text-center max-w-[250px] mt-1 px-4 leading-tight`}>
           {subtitle}
         </p>
       )}
@@ -260,10 +269,11 @@ export const EventsSection = ({ days }: EventsSectionProps) => {
         <Divider className="max-w-xs mx-auto" />
       </motion.div>
 
-      <div className="container max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
-        <div className="space-y-8 md:space-y-12">
+      <div className="container max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
+        {/* Grid layout for desktop - smaller cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {days.map((day, dayIndex) => (
-            <EventDayCard key={dayIndex} day={day} index={dayIndex} />
+            <EventDayCard key={dayIndex} day={day} index={dayIndex} isCompact={day.events.length <= 2} />
           ))}
         </div>
       </div>
@@ -271,12 +281,15 @@ export const EventsSection = ({ days }: EventsSectionProps) => {
   );
 };
 
-const EventDayCard = ({ day, index }: { day: EventDay; index: number }) => {
+const EventDayCard = ({ day, index, isCompact = false }: { day: EventDay; index: number; isCompact?: boolean }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   
   const eventNames = day.events.map(e => e.name);
   const theme = getEventTheme(day.title, eventNames);
+  
+  // For larger events (more than 2 sub-events), span full width
+  const spanFull = day.events.length > 2 || day.subtitle;
 
   return (
     <motion.div
@@ -284,33 +297,20 @@ const EventDayCard = ({ day, index }: { day: EventDay; index: number }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="relative"
+      className={`relative ${spanFull ? 'md:col-span-2 lg:col-span-3' : ''}`}
     >
-      {/* Floating illustrations - Left */}
-      <div className="absolute -left-2 sm:-left-4 md:-left-16 top-1/4 opacity-40 hidden sm:block">
-        <FloatingDecoration delay={0}>
-          {renderIllustration(theme.illustrations[0], theme.primary, "w-10 h-10 md:w-16 md:h-16")}
-        </FloatingDecoration>
-      </div>
-      
-      {/* Floating illustrations - Right */}
-      <div className="absolute -right-2 sm:-right-4 md:-right-16 top-1/3 opacity-40 hidden sm:block">
-        <FloatingDecoration delay={0.5}>
-          {renderIllustration(theme.illustrations[1] || theme.illustrations[0], theme.secondary, "w-8 h-8 md:w-14 md:h-14")}
-        </FloatingDecoration>
-      </div>
-
-      {/* Additional illustrations for Sangeet */}
-      {theme.theme === "sangeet" && (
+      {/* Floating illustrations - only show on larger cards */}
+      {spanFull && (
         <>
-          <div className="absolute -left-4 md:-left-20 bottom-1/4 opacity-30 hidden md:block">
-            <FloatingDecoration delay={1}>
-              {renderIllustration("spotlight", theme.primary, "w-12 h-12")}
+          <div className="absolute -left-2 sm:-left-4 md:-left-12 top-1/4 opacity-40 hidden md:block">
+            <FloatingDecoration delay={0}>
+              {renderIllustration(theme.illustrations[0], theme.primary, "w-10 h-10 md:w-14 md:h-14")}
             </FloatingDecoration>
           </div>
-          <div className="absolute -right-4 md:-right-20 bottom-1/3 opacity-30 hidden md:block">
-            <FloatingDecoration delay={1.5}>
-              {renderIllustration("music", theme.secondary, "w-10 h-10")}
+          
+          <div className="absolute -right-2 sm:-right-4 md:-right-12 top-1/3 opacity-40 hidden md:block">
+            <FloatingDecoration delay={0.5}>
+              {renderIllustration(theme.illustrations[1] || theme.illustrations[0], theme.secondary, "w-8 h-8 md:w-12 md:h-12")}
             </FloatingDecoration>
           </div>
         </>
