@@ -204,6 +204,7 @@ export const FloatingElements = ({ variant = "mixed", intensity = "heavy", heroO
 
   const y1 = useTransform(scrollYProgress, [0, 0.3], [0, -150]);
   const y2 = useTransform(scrollYProgress, [0, 0.3], [0, -250]);
+  const y3 = useTransform(scrollYProgress, [0, 0.3], [0, -80]); // Slower parallax for front layer
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   const counts = {
@@ -244,6 +245,17 @@ export const FloatingElements = ({ variant = "mixed", intensity = "heavy", heroO
     { left: "72%", top: "28%", size: "sm" as const, delay: 2.8 },
   ];
 
+  // Front layer - bigger, slower diyas
+  const frontDiyaPositions = [
+    { left: "5%", top: "20%", delay: 0.3 },
+    { left: "90%", top: "15%", delay: 1.2 },
+    { left: "15%", top: "50%", delay: 2.1 },
+    { left: "85%", top: "45%", delay: 0.7 },
+    { left: "50%", top: "10%", delay: 1.8 },
+    { left: "30%", top: "30%", delay: 2.5 },
+    { left: "70%", top: "35%", delay: 0.4 },
+  ];
+
   return (
     <motion.div
       style={{ opacity: heroOnly ? opacity : 1 }}
@@ -272,6 +284,75 @@ export const FloatingElements = ({ variant = "mixed", intensity = "heavy", heroO
             <FloatingDiya key={`diya-2-${i}`} {...pos} />
           ))}
         <GoldenSparkle count={config.sparkles} />
+      </motion.div>
+
+      {/* Parallax layer 4 - Front layer with bigger, slower diyas */}
+      <motion.div style={{ y: y3 }} className="absolute inset-0">
+        {(variant === "diyas" || variant === "mixed") &&
+          frontDiyaPositions.map((pos, i) => (
+            <motion.div
+              key={`front-diya-${i}`}
+              className="absolute pointer-events-none"
+              style={{ left: pos.left, top: pos.top }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{
+                opacity: [0.5, 0.85, 0.5],
+                y: [0, -15, -5, -20, 0],
+                x: [0, 5, -3, 4, 0],
+              }}
+              transition={{
+                duration: 12 + pos.delay,
+                repeat: Infinity,
+                delay: pos.delay,
+                ease: "easeInOut",
+              }}
+            >
+              <svg width={100} height={130} viewBox="0 0 50 65">
+                <defs>
+                  <linearGradient id={`diyaGoldFront-${i}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fcd34d" />
+                    <stop offset="50%" stopColor="#f59e0b" />
+                    <stop offset="100%" stopColor="#b45309" />
+                  </linearGradient>
+                  <radialGradient id={`flameGlowFront-${i}`} cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#f97316" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+                  </radialGradient>
+                  <linearGradient id={`flameFront-${i}`} x1="0%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" stopColor="#f97316" />
+                    <stop offset="50%" stopColor="#fbbf24" />
+                    <stop offset="100%" stopColor="#fef3c7" />
+                  </linearGradient>
+                </defs>
+                <motion.ellipse
+                  cx="25"
+                  cy="18"
+                  rx="20"
+                  ry="18"
+                  fill={`url(#flameGlowFront-${i})`}
+                  animate={{ opacity: [0.6, 1, 0.6], scale: [0.9, 1.1, 0.9] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
+                <motion.path
+                  d="M25 5 Q22 15 20 22 Q25 28 30 22 Q28 15 25 5"
+                  fill={`url(#flameFront-${i})`}
+                  animate={{
+                    d: [
+                      "M25 5 Q22 15 20 22 Q25 28 30 22 Q28 15 25 5",
+                      "M25 3 Q21 14 19 22 Q25 29 31 22 Q29 14 25 3",
+                      "M25 5 Q22 15 20 22 Q25 28 30 22 Q28 15 25 5",
+                    ],
+                  }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                />
+                <ellipse cx="25" cy="40" rx="18" ry="8" fill={`url(#diyaGoldFront-${i})`} />
+                <path d="M7 40 Q7 55 25 55 Q43 55 43 40" fill={`url(#diyaGoldFront-${i})`} />
+                <ellipse cx="25" cy="40" rx="18" ry="8" fill="none" stroke="#fcd34d" strokeWidth="1" />
+                <ellipse cx="25" cy="58" rx="10" ry="4" fill={`url(#diyaGoldFront-${i})`} />
+              </svg>
+            </motion.div>
+          ))}
       </motion.div>
     </motion.div>
   );
