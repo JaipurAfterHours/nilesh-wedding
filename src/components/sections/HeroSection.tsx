@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { GaneshIcon, Divider } from "../OrnateFrame";
 import { ElephantSVG, LotusSVG, FloatingStars } from "../decorative/RajasthaniElements";
+import { WeddingCountdown } from "../WeddingCountdown";
 
 interface HeroSectionProps {
   groomName: string;
@@ -181,6 +182,16 @@ export const HeroSection = ({
           <p className="font-heading text-lg sm:text-xl md:text-2xl text-brown text-shadow-heading font-semibold">
             {weddingDate}
           </p>
+        </motion.div>
+
+        {/* Countdown Timer */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+          className="mt-8 sm:mt-10"
+        >
+          <WeddingCountdown weddingDate={weddingDate} />
         </motion.div>
 
         {/* Scroll indicator */}
