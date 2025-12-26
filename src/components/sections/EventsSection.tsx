@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Divider } from "../OrnateFrame";
 import { Clock, ExternalLink } from "lucide-react";
 import {
@@ -409,6 +409,14 @@ const EventDayCard = ({
   const eventNames = day.events.map((e) => e.name);
   const theme = getEventTheme(day.title, eventNames);
   const eventImage = getEventImage(day.title, eventNames);
+
+  // Preload modal image so it's ready when popup opens
+  useEffect(() => {
+    if (eventImage) {
+      const img = new Image();
+      img.src = eventImage;
+    }
+  }, [eventImage]);
 
   // Height classes: let the tallest main-event card (e.g. Lagan Laagi Re) define the row height on desktop
   const heightClass = isMainEvent
