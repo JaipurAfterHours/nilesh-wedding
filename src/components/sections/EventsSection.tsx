@@ -19,6 +19,39 @@ import {
 } from "../decorative/EventIllustrations";
 import { EventDetailModal } from "./EventDetailModal";
 
+// Import event images
+import ganeshIdol from "@/assets/ganesh-idol.png";
+import baanThali from "@/assets/baan-thali.png";
+import sakdiRitual from "@/assets/sakdi-ritual.png";
+import haldiCouple from "@/assets/haldi-couple.png";
+import cocktailCouple from "@/assets/cocktail-couple.png";
+import weddingCouple from "@/assets/wedding-couple.png";
+
+// Map event themes to their images
+const getEventImage = (title: string, eventNames: string[]) => {
+  const combined = (title + " " + eventNames.join(" ")).toLowerCase();
+  
+  if (combined.includes("ganesh") || combined.includes("sthabpna") || combined.includes("sthapana") || combined.includes("vinayak")) {
+    return ganeshIdol;
+  }
+  if (combined.includes("baan") || combined.includes("ban")) {
+    return baanThali;
+  }
+  if (combined.includes("sakdi")) {
+    return sakdiRitual;
+  }
+  if (combined.includes("haldi")) {
+    return haldiCouple;
+  }
+  if (combined.includes("sangeet") || combined.includes("cocktail")) {
+    return cocktailCouple;
+  }
+  if (combined.includes("lagan") || combined.includes("barat") || combined.includes("wedding") || combined.includes("panigrahan")) {
+    return weddingCouple;
+  }
+  return null;
+};
+
 interface Event {
   name: string;
   date: string;
@@ -374,16 +407,24 @@ const EventDayCard = ({
 
   const eventNames = day.events.map((e) => e.name);
   const theme = getEventTheme(day.title, eventNames);
+  const eventImage = getEventImage(day.title, eventNames);
 
   // Height classes: top 3 (pre-events) = compact fixed height, bottom 3 (main events) = taller with highlight
   const heightClass = isMainEvent
     ? 'min-h-[280px] sm:min-h-[300px] md:min-h-[320px]' // Main events - taller
     : 'h-[200px] sm:h-[210px] md:h-[220px]'; // Pre-events - compact fixed height
 
-  // Main events get extra styling - glow effect and thicker border
-  const highlightClass = isMainEvent
-    ? 'ring-2 ring-offset-2 ring-offset-transparent shadow-2xl'
-    : '';
+  // Main events get neon glow effect
+  const neonGlowStyle = isMainEvent
+    ? {
+        boxShadow: `
+          0 0 15px ${theme.primary}60,
+          0 0 30px ${theme.primary}40,
+          0 0 45px ${theme.primary}20,
+          0 10px 40px -10px ${theme.primary}50
+        `,
+      }
+    : {};
 
   return (
     <motion.div
@@ -393,20 +434,11 @@ const EventDayCard = ({
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`relative w-full ${layoutClass}`}
     >
-      {/* Main event badge */}
-      {isMainEvent && (
-        <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
-          <span className={`px-3 py-1 text-[10px] font-heading uppercase tracking-wider text-white ${theme.headerBg} rounded-full shadow-lg`}>
-            Main Event
-          </span>
-        </div>
-      )}
-
       {/* Card with themed styling */}
       <div
         onClick={() => setIsModalOpen(true)}
-        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${heightClass} ${highlightClass}`}
-        style={isMainEvent ? { boxShadow: `0 10px 40px -10px ${theme.primary}40` } : {}}
+        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${heightClass} ${isMainEvent ? 'ring-2 ring-offset-2 ring-offset-transparent' : ''}`}
+        style={neonGlowStyle}
       >
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
@@ -455,25 +487,40 @@ const EventDayCard = ({
           flip
         />
 
-        {/* Floating illustrations in card corners */}
-        <div className="absolute top-14 right-3 opacity-25">
-          {renderIllustration(theme.illustrations[0], theme.primary, "w-8 h-8")}
-        </div>
-        <div className="absolute bottom-16 left-3 opacity-25">
-          {renderIllustration(
-            theme.illustrations[1] || theme.illustrations[0],
-            theme.secondary,
-            "w-6 h-6"
-          )}
-        </div>
-        {theme.illustrations[2] && (
-          <div className="absolute bottom-16 right-3 opacity-20">
-            {renderIllustration(
-              theme.illustrations[2],
-              theme.primary,
-              "w-6 h-6"
-            )}
+        {/* Event Image - prominently displayed */}
+        {eventImage && (
+          <div className="absolute top-12 right-2 z-10">
+            <img 
+              src={eventImage} 
+              alt={day.title}
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-lg"
+            />
           </div>
+        )}
+
+        {/* Floating illustrations in card corners - only show if no image */}
+        {!eventImage && (
+          <>
+            <div className="absolute top-14 right-3 opacity-25">
+              {renderIllustration(theme.illustrations[0], theme.primary, "w-8 h-8")}
+            </div>
+            <div className="absolute bottom-16 left-3 opacity-25">
+              {renderIllustration(
+                theme.illustrations[1] || theme.illustrations[0],
+                theme.secondary,
+                "w-6 h-6"
+              )}
+            </div>
+            {theme.illustrations[2] && (
+              <div className="absolute bottom-16 right-3 opacity-20">
+                {renderIllustration(
+                  theme.illustrations[2],
+                  theme.primary,
+                  "w-6 h-6"
+                )}
+              </div>
+            )}
+          </>
         )}
 
         {/* Arch Header with theme color */}
