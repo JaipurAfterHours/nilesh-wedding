@@ -177,30 +177,100 @@ const getMapLink = (address: string, mapLink?: string) => {
   return `https://maps.google.com/?q=${encodeURIComponent(address)}`;
 };
 
+// Generate calendar event URLs
+const generateGoogleCalendarUrl = (day: EventDay, event: { name: string; time: string }) => {
+  // Parse date like "Thursday, 5th February 2026"
+  const parseDate = (dateStr: string): string => {
+    const months: { [key: string]: string } = {
+      january: '01', february: '02', march: '03', april: '04', may: '05', june: '06',
+      july: '07', august: '08', september: '09', october: '10', november: '11', december: '12'
+    };
+    const cleaned = dateStr.toLowerCase().replace(/(\d+)(st|nd|rd|th)/g, '$1');
+    const match = cleaned.match(/(\d+)\s+(\w+)\s+(\d{4})/);
+    if (match) {
+      const day = match[1].padStart(2, '0');
+      const month = months[match[2]];
+      const year = match[3];
+      return `${year}${month}${day}`;
+    }
+    return '';
+  };
+
+  const dateStr = parseDate(day.date);
+  const title = encodeURIComponent(`${event.name} - ${day.title}`);
+  const location = encodeURIComponent(day.address || day.venue || '');
+  const details = encodeURIComponent(day.subtitle || `${event.name} ceremony`);
+  
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateStr}/${dateStr}&location=${location}&details=${details}`;
+};
+
+const generateAppleCalendarUrl = (day: EventDay, event: { name: string; time: string }) => {
+  // For Apple Calendar, we create an .ics file data URL
+  const parseDate = (dateStr: string): string => {
+    const months: { [key: string]: string } = {
+      january: '01', february: '02', march: '03', april: '04', may: '05', june: '06',
+      july: '07', august: '08', september: '09', october: '10', november: '11', december: '12'
+    };
+    const cleaned = dateStr.toLowerCase().replace(/(\d+)(st|nd|rd|th)/g, '$1');
+    const match = cleaned.match(/(\d+)\s+(\w+)\s+(\d{4})/);
+    if (match) {
+      const d = match[1].padStart(2, '0');
+      const month = months[match[2]];
+      const year = match[3];
+      return `${year}${month}${d}`;
+    }
+    return '';
+  };
+
+  const dateStr = parseDate(day.date);
+  const title = `${event.name} - ${day.title}`;
+  const location = day.address || day.venue || '';
+  const description = day.subtitle || `${event.name} ceremony`;
+
+  const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:${dateStr}
+DTEND:${dateStr}
+SUMMARY:${title}
+LOCATION:${location}
+DESCRIPTION:${description}
+END:VEVENT
+END:VCALENDAR`;
+
+  return `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
+};
+
 export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailModalProps) => {
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop with smooth scale-down on click */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 cursor-pointer"
           />
 
-          {/* Modal */}
+          {/* Modal with enhanced exit animation */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            exit={{ 
+              opacity: 0, 
+              scale: 0.85, 
+              y: 30,
+              transition: { duration: 0.25, ease: "easeInOut" }
+            }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
-            <div
+            <motion.div
               className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-gradient-to-br ${theme.bg} rounded-2xl shadow-2xl border-2 ${theme.border} pointer-events-auto`}
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Floating illustrations */}
               <div className="absolute top-4 left-4 opacity-30 pointer-events-none">
@@ -227,7 +297,7 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
               {/* Close button */}
               <button
                 onClick={onClose}
-                className={`absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 hover:bg-white ${theme.textColor} transition-colors shadow-lg`}
+                className={`absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 hover:bg-white ${theme.textColor} transition-all duration-200 shadow-lg hover:scale-110`}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -293,6 +363,31 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
                             {event.description}
                           </p>
                         )}
+                        
+                        {/* Add to Calendar buttons */}
+                        <div className="flex gap-2 mt-3 pt-3 border-t border-current/10">
+                          <a
+                            href={generateGoogleCalendarUrl(day, event)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full bg-white/70 hover:bg-white ${theme.textColor} transition-colors`}
+                          >
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 22c5.421 0 10-4.579 10-10S17.421 2 12 2 2 6.579 2 12s4.579 10 10 10zm0-18c4.337 0 8 3.663 8 8s-3.663 8-8 8-8-3.663-8-8 3.663-8 8-8zm1 4h-2v5h5v-2h-3z"/>
+                            </svg>
+                            Google
+                          </a>
+                          <a
+                            href={generateAppleCalendarUrl(day, event)}
+                            download={`${event.name.replace(/\s+/g, '-')}.ics`}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full bg-white/70 hover:bg-white ${theme.textColor} transition-colors`}
+                          >
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"/>
+                            </svg>
+                            Apple
+                          </a>
+                        </div>
                       </motion.div>
                     ))}
                   </div>
@@ -330,7 +425,7 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </>
       )}

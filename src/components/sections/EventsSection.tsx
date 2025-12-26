@@ -321,7 +321,8 @@ export const EventsSection = ({ days }: EventsSectionProps) => {
             const isLast = dayIndex === total - 1;
 
             const isSingleEvent = day.events.length === 1;
-            // (kept for compatibility with existing intent)
+            // First 3 cards (index 0-2) are pre-events, last 3 (index 3-5) are main events
+            const isMainEvent = dayIndex >= 3;
             const isLargeCard = day.events.length > 2 || Boolean(day.subtitle);
 
             const mdSingleLast = total % 2 === 1 && isLast;
@@ -341,6 +342,7 @@ export const EventsSection = ({ days }: EventsSectionProps) => {
                 index={dayIndex}
                 isSingleEvent={isSingleEvent}
                 isLargeCard={isLargeCard}
+                isMainEvent={isMainEvent}
                 layoutClass={spanClass}
               />
             );
@@ -356,12 +358,14 @@ const EventDayCard = ({
   index,
   isSingleEvent = false,
   isLargeCard = false,
+  isMainEvent = false,
   layoutClass = "",
 }: {
   day: EventDay;
   index: number;
   isSingleEvent?: boolean;
   isLargeCard?: boolean;
+  isMainEvent?: boolean;
   layoutClass?: string;
 }) => {
   const ref = useRef(null);
@@ -370,6 +374,17 @@ const EventDayCard = ({
 
   const eventNames = day.events.map((e) => e.name);
   const theme = getEventTheme(day.title, eventNames);
+
+  // Height classes: top 3 (pre-events) = compact fixed height, bottom 3 (main events) = taller with highlight
+  const heightClass = isMainEvent
+    ? 'min-h-[280px] sm:min-h-[300px] md:min-h-[320px]' // Main events - taller
+    : 'h-[200px] sm:h-[210px] md:h-[220px]'; // Pre-events - compact fixed height
+
+  // Main events get extra styling - glow effect and thicker border
+  const highlightClass = isMainEvent
+    ? 'ring-2 ring-offset-2 ring-offset-transparent shadow-2xl'
+    : '';
+
   return (
     <motion.div
       ref={ref}
@@ -378,10 +393,20 @@ const EventDayCard = ({
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`relative w-full ${layoutClass}`}
     >
-      {/* Card with themed styling - auto height for multi-event, fixed for single */}
+      {/* Main event badge */}
+      {isMainEvent && (
+        <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
+          <span className={`px-3 py-1 text-[10px] font-heading uppercase tracking-wider text-white ${theme.headerBg} rounded-full shadow-lg`}>
+            Main Event
+          </span>
+        </div>
+      )}
+
+      {/* Card with themed styling */}
       <div
         onClick={() => setIsModalOpen(true)}
-        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${isSingleEvent ? 'h-[220px] sm:h-[230px] md:h-[240px]' : 'min-h-[240px] sm:min-h-[260px] md:min-h-[280px]'}`}
+        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${heightClass} ${highlightClass}`}
+        style={isMainEvent ? { boxShadow: `0 10px 40px -10px ${theme.primary}40` } : {}}
       >
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
