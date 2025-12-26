@@ -305,7 +305,8 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
             <motion.div
-              className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-gradient-to-br ${theme.bg} rounded-2xl shadow-2xl border-2 ${theme.border} pointer-events-auto`}
+              className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-gradient-to-br ${theme.bg} rounded-2xl shadow-2xl border-2 ${theme.border} pointer-events-auto scrollbar-hide`}
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Floating illustrations */}
@@ -359,7 +360,7 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
               </div>
 
               {/* Content */}
-              <div className="p-6 space-y-6 relative">
+              <div className="p-4 space-y-3 relative">
                 {/* Date */}
                 <div className={`flex items-center justify-center gap-3 ${theme.textColor}`}>
                   <Calendar className="w-5 h-5" />
@@ -367,71 +368,46 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
                 </div>
 
                 {/* Event Image or Couple Illustration */}
-                <div className="flex justify-center py-4">
+                <div className="flex justify-center py-2">
                   {eventImage ? (
                     <img 
                       src={eventImage} 
                       alt={day.title}
-                      className="w-48 h-48 sm:w-56 sm:h-56 object-contain drop-shadow-xl"
+                      className="w-36 h-36 sm:w-44 sm:h-44 object-contain drop-shadow-lg"
                     />
                   ) : (
-                    <CoupleIllustration theme={theme.theme} className="w-40 h-48" />
+                    <CoupleIllustration theme={theme.theme} className="w-32 h-40" />
                   )}
                 </div>
 
                 {/* Events List */}
-                <div className="space-y-4">
-                  <h3 className={`font-heading text-sm uppercase tracking-widest ${theme.textColor} opacity-70 text-center`}>
+                <div className="space-y-2">
+                  <h3 className={`font-heading text-xs uppercase tracking-widest ${theme.textColor} opacity-70 text-center`}>
                     Schedule
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {day.events.map((event, idx) => (
                       <motion.div
                         key={idx}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.1 * idx }}
-                        className={`bg-white/50 backdrop-blur-sm rounded-xl p-4 border ${theme.border}`}
+                        className={`bg-white/80 rounded-lg p-3 border ${theme.border}`}
                       >
                         <div className="flex items-center justify-between">
-                          <h4 className={`font-heading text-base font-semibold ${theme.textColor}`}>
+                          <h4 className={`font-heading text-sm font-semibold ${theme.textColor}`}>
                             {event.name}
                           </h4>
-                          <div className={`flex items-center gap-2 ${theme.textColor}`}>
-                            <Clock className="w-4 h-4" />
-                            <span className="font-body text-sm font-medium">{event.time}</span>
+                          <div className={`flex items-center gap-1.5 ${theme.textColor}`}>
+                            <Clock className="w-3.5 h-3.5" />
+                            <span className="font-body text-xs font-medium">{event.time}</span>
                           </div>
                         </div>
                         {event.description && (
-                          <p className={`mt-2 font-body text-sm ${theme.textColor} opacity-80`}>
+                          <p className={`mt-1 font-body text-xs ${theme.textColor} opacity-80`}>
                             {event.description}
                           </p>
                         )}
-                        
-                        {/* Add to Calendar buttons */}
-                        <div className="flex gap-2 mt-3 pt-3 border-t border-current/10">
-                          <a
-                            href={generateGoogleCalendarUrl(day, event)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full bg-white/70 hover:bg-white ${theme.textColor} transition-colors`}
-                          >
-                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 22c5.421 0 10-4.579 10-10S17.421 2 12 2 2 6.579 2 12s4.579 10 10 10zm0-18c4.337 0 8 3.663 8 8s-3.663 8-8 8-8-3.663-8-8 3.663-8 8-8zm1 4h-2v5h5v-2h-3z"/>
-                            </svg>
-                            Google
-                          </a>
-                          <a
-                            href={generateAppleCalendarUrl(day, event)}
-                            download={`${event.name.replace(/\s+/g, '-')}.ics`}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full bg-white/70 hover:bg-white ${theme.textColor} transition-colors`}
-                          >
-                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"/>
-                            </svg>
-                            Apple
-                          </a>
-                        </div>
                       </motion.div>
                     ))}
                   </div>
@@ -439,31 +415,31 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
 
                 {/* Venue */}
                 {(day.venue || day.address) && (
-                  <div className={`mt-6 pt-4 border-t ${theme.border}`}>
-                    <h3 className={`font-heading text-sm uppercase tracking-widest ${theme.textColor} opacity-70 text-center mb-3`}>
+                  <div className={`mt-3 pt-3 border-t ${theme.border}`}>
+                    <h3 className={`font-heading text-xs uppercase tracking-widest ${theme.textColor} opacity-70 text-center mb-2`}>
                       Venue
                     </h3>
                     <a
                       href={getMapLink(day.address || day.venue || "", day.mapLink)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`block bg-white/50 backdrop-blur-sm rounded-xl p-4 border ${theme.border} hover:bg-white/70 transition-colors group`}
+                      className={`block bg-white/80 rounded-lg p-3 border ${theme.border} hover:bg-white transition-colors group`}
                     >
-                      <div className="flex items-start gap-3">
-                        <MapPin className={`w-5 h-5 ${theme.textColor} flex-shrink-0 mt-0.5`} />
+                      <div className="flex items-start gap-2">
+                        <MapPin className={`w-4 h-4 ${theme.textColor} flex-shrink-0 mt-0.5`} />
                         <div className="flex-1">
                           {day.venue && (
-                            <p className={`font-heading text-base font-semibold ${theme.textColor} group-hover:underline`}>
+                            <p className={`font-heading text-sm font-semibold ${theme.textColor} group-hover:underline`}>
                               {day.venue}
                             </p>
                           )}
                           {day.address && (
-                            <p className={`font-body text-sm ${theme.textColor} opacity-80 mt-1 group-hover:underline`}>
+                            <p className={`font-body text-xs ${theme.textColor} opacity-80 mt-0.5 group-hover:underline`}>
                               {day.address}
                             </p>
                           )}
                         </div>
-                        <ExternalLink className={`w-4 h-4 ${theme.textColor} opacity-60 group-hover:opacity-100 transition-opacity`} />
+                        <ExternalLink className={`w-3.5 h-3.5 ${theme.textColor} opacity-60 group-hover:opacity-100 transition-opacity`} />
                       </div>
                     </a>
                   </div>
