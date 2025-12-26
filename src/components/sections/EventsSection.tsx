@@ -487,13 +487,13 @@ const EventDayCard = ({
           flip
         />
 
-        {/* Event Image - prominently displayed */}
+        {/* Event Image - centered and prominent */}
         {eventImage && (
-          <div className="absolute top-12 right-2 z-10">
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
             <img 
               src={eventImage} 
               alt={day.title}
-              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-lg"
+              className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 object-contain drop-shadow-xl"
             />
           </div>
         )}
