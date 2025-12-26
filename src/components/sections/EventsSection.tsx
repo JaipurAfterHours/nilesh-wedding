@@ -410,9 +410,9 @@ const EventDayCard = ({
   const theme = getEventTheme(day.title, eventNames);
   const eventImage = getEventImage(day.title, eventNames);
 
-  // Height classes: Main events have equal fixed height on desktop based on largest card
+  // Height classes: let the tallest main-event card (e.g. Lagan Laagi Re) define the row height on desktop
   const heightClass = isMainEvent
-    ? 'min-h-[380px] sm:min-h-[400px] md:h-[480px]' // Main events - fixed height matching largest card (Lagan Laagi Re)
+    ? 'min-h-[380px] sm:min-h-[420px] md:min-h-[520px]' // Main events - flexible height, higher baseline to avoid clipping
     : 'min-h-[320px] sm:min-h-[340px] md:min-h-[360px]'; // Pre-events - increased to fit images
 
   // Main events get neon glow effect
@@ -438,7 +438,7 @@ const EventDayCard = ({
       {/* Card with themed styling */}
       <div
         onClick={() => setIsModalOpen(true)}
-        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${heightClass} ${isMainEvent ? 'ring-2 ring-offset-2 ring-offset-transparent' : ''}`}
+        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 h-full ${heightClass} ${isMainEvent ? 'ring-2 ring-offset-2 ring-offset-transparent' : ''}`}
         style={neonGlowStyle}
       >
         {/* Subtle background pattern */}
@@ -624,12 +624,12 @@ const EventDayCard = ({
                   <ExternalLink className="w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" />
                 </p>
                 {day.venue && (
-                  <p className="font-heading text-lg sm:text-xl md:text-2xl font-bold group-hover:underline line-clamp-1">
+                  <p className="font-heading text-lg sm:text-xl md:text-2xl font-bold group-hover:underline line-clamp-2 md:line-clamp-none">
                     {day.venue}
                   </p>
                 )}
                 {day.address && (
-                  <p className="font-body text-[10px] opacity-80 break-words group-hover:underline leading-tight line-clamp-1">
+                  <p className="font-body text-[10px] opacity-80 break-words group-hover:underline leading-tight line-clamp-2 md:line-clamp-none">
                     {day.address}
                   </p>
                 )}
