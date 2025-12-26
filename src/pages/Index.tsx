@@ -1,8 +1,11 @@
+import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FloatingElements } from "@/components/FloatingElements";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { InvitationSection } from "@/components/sections/InvitationSection";
 import { EventsSection } from "@/components/sections/EventsSection";
 import { RSVPSection } from "@/components/sections/RSVPSection";
+import { BackgroundMusic } from "@/components/BackgroundMusic";
 import { LotusSVG, PeacockSVG } from "@/components/decorative/RajasthaniElements";
 import { motion } from "framer-motion";
 
@@ -171,8 +174,27 @@ const weddingData = {
 };
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
+  
+  // Filter events based on URL parameter
+  // Usage: ?events=sangeet,lagan or ?events=haldi,sangeet,lagan
+  const filteredEvents = useMemo(() => {
+    const eventsParam = searchParams.get("events");
+    if (!eventsParam) return weddingData.eventDays;
+    
+    const eventFilters = eventsParam.toLowerCase().split(",").map(e => e.trim());
+    
+    return weddingData.eventDays.filter(day => {
+      const titleLower = day.title.toLowerCase();
+      return eventFilters.some(filter => titleLower.includes(filter));
+    });
+  }, [searchParams]);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden">
+      {/* Background Music */}
+      <BackgroundMusic />
+      
       {/* Floating Diyas with Parallax - Hero only */}
       <FloatingElements variant="mixed" intensity="heavy" heroOnly={true} />
 
@@ -199,7 +221,7 @@ const Index = () => {
       />
 
       {/* Events Timeline */}
-      <EventsSection days={weddingData.eventDays} />
+      <EventsSection days={filteredEvents} />
 
       {/* RSVP & Contacts */}
       <RSVPSection
