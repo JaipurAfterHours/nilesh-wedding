@@ -15,6 +15,39 @@ import {
   SpotlightSVG,
 } from "../decorative/EventIllustrations";
 
+// Import event images
+import ganeshIdol from "@/assets/ganesh-idol.png";
+import baanThali from "@/assets/baan-thali.png";
+import sakdiRitual from "@/assets/sakdi-ritual.png";
+import haldiCouple from "@/assets/haldi-couple.png";
+import cocktailCouple from "@/assets/cocktail-couple.png";
+import weddingCouple from "@/assets/wedding-couple.png";
+
+// Map event themes to their images
+const getEventImage = (title: string, eventNames: string[]) => {
+  const combined = (title + " " + eventNames.join(" ")).toLowerCase();
+  
+  if (combined.includes("ganesh") || combined.includes("sthabpna") || combined.includes("sthapana") || combined.includes("vinayak")) {
+    return ganeshIdol;
+  }
+  if (combined.includes("baan") || combined.includes("ban")) {
+    return baanThali;
+  }
+  if (combined.includes("sakdi")) {
+    return sakdiRitual;
+  }
+  if (combined.includes("haldi")) {
+    return haldiCouple;
+  }
+  if (combined.includes("sangeet") || combined.includes("cocktail")) {
+    return cocktailCouple;
+  }
+  if (combined.includes("lagan") || combined.includes("barat") || combined.includes("wedding") || combined.includes("panigrahan")) {
+    return weddingCouple;
+  }
+  return null;
+};
+
 interface Event {
   name: string;
   date: string;
@@ -242,6 +275,9 @@ END:VCALENDAR`;
 };
 
 export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailModalProps) => {
+  const eventNames = day.events.map((e) => e.name);
+  const eventImage = getEventImage(day.title, eventNames);
+  
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
@@ -330,9 +366,17 @@ export const EventDetailModal = ({ isOpen, onClose, day, theme }: EventDetailMod
                   <span className="font-heading text-lg font-semibold">{day.date}</span>
                 </div>
 
-                {/* Couple Illustration */}
+                {/* Event Image or Couple Illustration */}
                 <div className="flex justify-center py-4">
-                  <CoupleIllustration theme={theme.theme} className="w-40 h-48" />
+                  {eventImage ? (
+                    <img 
+                      src={eventImage} 
+                      alt={day.title}
+                      className="w-48 h-48 sm:w-56 sm:h-56 object-contain drop-shadow-xl"
+                    />
+                  ) : (
+                    <CoupleIllustration theme={theme.theme} className="w-40 h-48" />
+                  )}
                 </div>
 
                 {/* Events List */}
