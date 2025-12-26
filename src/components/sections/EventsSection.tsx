@@ -535,7 +535,7 @@ const EventDayCard = ({
 
         {/* Date */}
         <div className={`px-4 py-1.5 text-center ${theme.textColor}`}>
-          <p className="font-heading text-sm sm:text-base font-semibold text-shadow-heading">
+          <p className="font-heading text-base sm:text-lg md:text-xl font-semibold text-shadow-heading">
             {day.date}
           </p>
         </div>
@@ -572,8 +572,8 @@ const EventDayCard = ({
           {isSingleEvent ? (
             <div className="flex items-center justify-center">
               <div className={`flex items-center gap-2 ${theme.textColor}`}>
-                <Clock className="w-4 h-4" />
-                <span className="font-heading text-lg font-semibold">
+                <Clock className="w-5 h-5" />
+                <span className="font-heading text-xl sm:text-2xl font-semibold">
                   {day.events[0].time}
                 </span>
               </div>
@@ -589,15 +589,15 @@ const EventDayCard = ({
                   className={`flex items-center justify-between py-1.5 border-b ${theme.border} last:border-0`}
                 >
                   <h4
-                    className={`font-heading text-xs sm:text-sm ${theme.textColor} font-semibold truncate`}
+                    className={`font-heading text-sm sm:text-base md:text-lg ${theme.textColor} font-semibold truncate`}
                   >
                     {event.name}
                   </h4>
                   <div
-                    className={`flex items-center gap-1 ${theme.textColor} ml-2 flex-shrink-0`}
+                    className={`flex items-center gap-1.5 ${theme.textColor} ml-2 flex-shrink-0`}
                   >
-                    <Clock className="w-3 h-3" />
-                    <span className="font-body text-xs font-medium whitespace-nowrap">
+                    <Clock className="w-4 h-4" />
+                    <span className="font-body text-sm sm:text-base font-medium whitespace-nowrap">
                       {event.time}
                     </span>
                   </div>
