@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Divider } from "../OrnateFrame";
 import { Clock, ExternalLink } from "lucide-react";
 import {
@@ -17,6 +17,7 @@ import {
   CameraSVG,
   SpotlightSVG,
 } from "../decorative/EventIllustrations";
+import { EventDetailModal } from "./EventDetailModal";
 
 interface Event {
   name: string;
@@ -365,10 +366,10 @@ const EventDayCard = ({
 }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const eventNames = day.events.map((e) => e.name);
   const theme = getEventTheme(day.title, eventNames);
-
   return (
     <motion.div
       ref={ref}
@@ -377,9 +378,10 @@ const EventDayCard = ({
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`relative w-full ${layoutClass}`}
     >
-      {/* Card with themed styling - consistent height for all cards */}
+      {/* Card with themed styling - auto height for multi-event, fixed for single */}
       <div
-        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col h-[240px] sm:h-[250px] md:h-[260px]`}
+        onClick={() => setIsModalOpen(true)}
+        className={`relative bg-gradient-to-br ${theme.bg} backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border-2 ${theme.border} flex flex-col cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${isSingleEvent ? 'h-[220px] sm:h-[230px] md:h-[240px]' : 'min-h-[240px] sm:min-h-[260px] md:min-h-[280px]'}`}
       >
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
@@ -563,6 +565,14 @@ const EventDayCard = ({
           </div>
         )}
       </div>
+
+      {/* Event Detail Modal */}
+      <EventDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        day={day}
+        theme={theme}
+      />
     </motion.div>
   );
 };
