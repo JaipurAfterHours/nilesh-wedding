@@ -624,7 +624,7 @@ const EventDayCard = ({
                   <ExternalLink className="w-2 h-2 opacity-60 group-hover:opacity-100 transition-opacity" />
                 </p>
                 {day.venue && (
-                  <p className="font-heading text-xs font-semibold group-hover:underline line-clamp-1">
+                  <p className="font-heading text-sm sm:text-base font-semibold group-hover:underline line-clamp-1">
                     {day.venue}
                   </p>
                 )}

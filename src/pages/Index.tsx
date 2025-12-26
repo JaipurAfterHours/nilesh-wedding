@@ -39,7 +39,7 @@ const weddingData = {
       date: "Saturday, 31st January 2026",
       venue: "At Residence",
       address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",
-      mapLink: "https://maps.google.com/?q=A-21,+Sudama+Marg,+Vijay+Vadi,+Path+No.+6,+Sikar+Road,+Jaipur",
+      mapLink: "https://maps.app.goo.gl/7ZfAks4gN52277737",
       events: [
         { name: "Ganesh Sthapana", time: "9:00 am", date: "", description: "" },
       ],
@@ -49,7 +49,7 @@ const weddingData = {
       date: "Monday, 2nd February 2026",
       venue: "At Residence",
       address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",
-      mapLink: "https://maps.google.com/?q=A-21,+Sudama+Marg,+Vijay+Vadi,+Path+No.+6,+Sikar+Road,+Jaipur",
+      mapLink: "https://maps.app.goo.gl/7ZfAks4gN52277737",
       events: [
         { name: "Baan", time: "10:15 am", date: "", description: "" },
       ],
@@ -59,7 +59,7 @@ const weddingData = {
       date: "Wednesday, 4th February 2026",
       venue: "At Residence",
       address: "A-21, Sudama Marg, Vijay Vadi, Path No. 6, Sikar Road, Jaipur",
-      mapLink: "https://maps.google.com/?q=A-21,+Sudama+Marg,+Vijay+Vadi,+Path+No.+6,+Sikar+Road,+Jaipur",
+      mapLink: "https://maps.app.goo.gl/7ZfAks4gN52277737",
       events: [
         { name: "Sakdi Vinayak", time: "11:15 am", date: "", description: "" },
       ],
@@ -70,7 +70,7 @@ const weddingData = {
       date: "Thursday, 5th February 2026",
       venue: "Idanta",
       address: "Green Triveni, Grand Sikar Road Behind, Ashiana Greens, Jaipur-302048",
-      mapLink: "https://maps.google.com/?q=Green+Triveni,+Grand+Sikar+Road+Behind,+Ashiana+Greens,+Jaipur-302048",
+      mapLink: "https://maps.app.goo.gl/LuGjSACrHoT5SxvYA",
       events: [
         { name: "Haldi", time: "11:00 am", date: "", description: "" },
         { name: "Lunch", time: "1:00 pm", date: "", description: "" },
@@ -83,7 +83,7 @@ const weddingData = {
       date: "Thursday, 5th February 2026",
       venue: "Idanta",
       address: "Green Triveni, Grand Sikar Road Behind, Ashiana Greens, Jaipur-302048",
-      mapLink: "https://maps.google.com/?q=Green+Triveni,+Grand+Sikar+Road+Behind,+Ashiana+Greens,+Jaipur-302048",
+      mapLink: "https://maps.app.goo.gl/LuGjSACrHoT5SxvYA",
       events: [
         { name: "Sangeet Ceremony", time: "7:00 pm", date: "", description: "" },
       ],
@@ -94,7 +94,7 @@ const weddingData = {
       date: "Friday, 6th February 2026",
       venue: "Idanta",
       address: "Green Triveni, Grand Sikar Road Behind, Ashiana Greens, Jaipur-302048",
-      mapLink: "https://maps.google.com/?q=Green+Triveni,+Grand+Sikar+Road+Behind,+Ashiana+Greens,+Jaipur-302048",
+      mapLink: "https://maps.app.goo.gl/LuGjSACrHoT5SxvYA",
       events: [
         { name: "Bhaat", time: "11:00 am", date: "", description: "" },
         { name: "Lunch", time: "1:00 pm", date: "", description: "" },
